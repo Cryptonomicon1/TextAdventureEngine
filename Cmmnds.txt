@@ -1,0 +1,9 @@
+take ___ from ___
+give ___ to ___
+
+Done Commands
+go ___ [(n)orth] [(e)ast] [(s)outh] [(w)est]
+say ___ to ___
+study ___
+drop ___
+take ___

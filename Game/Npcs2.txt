@@ -1,0 +1,33 @@
+Npc
+Front Gate
+Theif
+Keven
+
+hello
+Oh, um. Hello... Can you really see me?
+
+hi
+Shhhhh. I am super stealthy. See me... disappear...
+
+how are you
+I um, I am pretty bad right now. I took this gold from this alchemist, and now I am cursed. The problem is embarrasing. I um, cannot get hard... You know... down there.
+
+gold?
+Yeah, please take it. I don't want it anymore.
+
+Npc
+Courtyard
+Beekeeper
+Billy
+
+hello
+Howdy!
+
+hi
+Howdy!
+
+how are you
+I'm just swell *hic*. But don't tell my boss I am drunk.
+
+honey?
+Aw man! I just ran out. I sold it all to Alfred. Sorry
