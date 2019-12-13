@@ -3,6 +3,8 @@ Front Gate
 Theif
 Keven
 
+trigger hear gold? drop gold
+
 hello
 Oh, um. Hello... Can you really see me?
 
@@ -14,6 +16,8 @@ I um, I am pretty bad right now. I took this gold from this alchemist, and now I
 
 gold?
 Yeah, please take it. I don't want it anymore.
+
+said Yeah, please take it. I don't want it anymore. add 1
 
 Npc
 Courtyard

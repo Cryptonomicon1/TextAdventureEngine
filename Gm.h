@@ -47,8 +47,10 @@ private:
 	vector<shared_ptr<Rms>> rms;
 	shared_ptr<IO> io;
 	shared_ptr<Cmmnds> cmmnds;
-	
-	enum {nmsk = 0, rdr = 1, hv = 0, cnt = 1, hr = 2};
+	int cntr;
+	string tpt_strng;
+
+	enum {nmsk=0, rdr=1, sy=2, dd=3, hv=0, cnt=1, hr=2};
 
 	int hll, gt, alch, blck, crt;
 
@@ -61,8 +63,9 @@ private:
 	int gtRmNdx(string);
 	shared_ptr<Rms> fndRm(string);
 	shared_ptr<NPC> fndNpc(string);
-	void dRdrs(string);
-	void dRdr(shared_ptr<NPC>, string);
+	void dRdrs(string, string);
+	void dRdr(shared_ptr<NPC>, string, string);
+	string fltrStrng(string, string);
 };
 Gm::Gm(string s) {
 	crt = 0;
@@ -70,6 +73,10 @@ Gm::Gm(string s) {
 	blck = 2;
 	gt = 4;
 	alch = 3;
+
+	cntr = 1;
+
+	tpt_strng = "";
 	
 	io = make_shared<IO>("");
 	bldMp();
@@ -86,8 +93,7 @@ void Gm::ply() {
 	string npt;
 	int npc_i = 0;
 	int tm_i = 0;
-	int mxmm_trggrs = 10; // gtMxmmTrggrs();
-	string tpt_strng = "";
+	int mxmm_trggrs = gtMxmmTrggrs();
 	do {
 		io->clrWndw();
 		io->pdtPlcWndw(plyr->gtRm()->gtNm() + "\n");
@@ -125,17 +131,16 @@ void Gm::ply() {
 		io->rfrshWndw();
 		tpt_strng = "";
 		npt = io->gtNpt();
-		dRdrs(" ");
 		tpt_strng = cmmnds->D(plyr, npt, gtTrggrCnt());
-		/*
-		if(gtTrggrCnt() > 2) {
-			shared_ptr<NPC> tmp = fndNpc("Joe");
-			cmmnds->D(tmp, "drop daggar", gtTrggrCnt());
-		}; */
+		dRdrs(npt, tpt_strng);
+	
 	} while(npt != "q" && npt != "quit" &&
 			npt != "Quit" && gtTrggrCnt() < mxmm_trggrs);
 
 	if(gtTrggrCnt() >= mxmm_trggrs) {
+		tpt_strng = "";
+		dRdrs(npt, tpt_strng);
+		io->clrWndw();
 		io->pdtTptWndw(tpt_strng);
 		io->rfrshWndw();
 		io->gtNpt();
@@ -228,7 +233,7 @@ void Gm::bldTms() {
 			if(npt.size() > 0 && rm != nullptr) {
 				rm->ddTm(make_shared<Tm>(npt[1], npt[2], npt[3]));
 				npt.clear();
-			} else if(dt.size() > 0 && npc != nullptr) {
+			} else if(npt.size() > 0 && npc != nullptr) {
 				npc->ddTm(make_shared<Tm>(npt[1], npt[2], npt[3]));
 				npt.clear();
 			};
@@ -240,14 +245,7 @@ void Gm::bldTms() {
 	};
 };
 int Gm::gtTrggrCnt() {
-	int tpt = 1;
-	tpt += rms[crt]->gtNpc(0)->gtTrggrCnt();
-	tpt += rms[hll]->gtNpc(0)->gtTrggrCnt();
-	tpt += rms[blck]->gtNpc(0)->gtTrggrCnt();
-	tpt += rms[gt]->gtNpc(0)->gtTrggrCnt();
-	tpt += rms[alch]->gtNpc(0)->gtTrggrCnt();
-
-	return tpt;
+	return cntr;
 };
 int Gm::gtMxmmTrggrs() {
 	int j, tpt = 0;
@@ -290,19 +288,20 @@ shared_ptr<NPC> Gm::fndNpc(string n) {
 	};
 	return nullptr;
 };
-void Gm::dRdrs(string s) {
+void Gm::dRdrs(string npt, string tpt) {
 	int i = 0, j = 0;
 	while(rms[i] != nullptr) {
 		j = 0;
 		while(rms[i]->gtNpc(j) != nullptr) {
-			dRdr(rms[i]->gtNpc(j), s);
+			dRdr(rms[i]->gtNpc(j), npt, tpt);
 			j++;
 		};
 		i++;
 	};
 };
-void Gm::dRdr(shared_ptr<NPC> n, string s) {
-	vector<trggr> trgs = n->chckCndtn(s, gtTrggrCnt() );
+void Gm::dRdr(shared_ptr<NPC> n, string npt, string tpt) {
+	npt = fltrStrng( cmmnds->lwrCs( n->gtNm() ), npt);
+	vector<trggr> trgs = n->chckCndtn(npt, tpt, gtTrggrCnt() );
 
 	for(int i(0); i < trgs.size(); i++) {
 
@@ -314,7 +313,24 @@ void Gm::dRdr(shared_ptr<NPC> n, string s) {
 		//Execute Command?
 		} else if(trgs[i].rdr == rdr) {
 			cmmnds->D( n, trgs[i].rdr_mssg, gtTrggrCnt() );
+		
+		} else if(trgs[i].rdr == sy) {
+			if(tpt_strng == " " || tpt_strng.size() == 0) {
+				tpt_strng = trgs[i].rdr_mssg;
+			} else tpt_strng += trgs[i].rdr_mssg;
+		
+		} else if(trgs[i].rdr == dd) {
+			cntr += stoi( trgs[i].rdr_mssg );
 		};
 	};
+};
+string Gm::fltrStrng(string nm, string s) {
+	if(s.find("to") != string::npos && s.substr(0, 3) == "say") {
+		int fnsh = s.find("to");
+		if( nm == s.substr(fnsh + 3) ) {
+			return s.substr(4, fnsh - 5);
+		};
+	};
+	return " ";
 };
 #endif

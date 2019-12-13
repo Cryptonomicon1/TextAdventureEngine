@@ -42,7 +42,7 @@ public:
 	shared_ptr<Tm> tkTm(int);
 	int gtTrggrCnt();
 	int gtMxmmTrggrCnt();
-	vector<trggr> chckCndtn(string, int);
+	vector<trggr> chckCndtn(string, string, int);
 	void stTrgrMsk(trggr);
 
 private:
@@ -60,9 +60,7 @@ private:
 	string rm_nm;
 	vector<trggr> trgs;
 
-	enum {nmsk = 0, rdr = 1, sy = 2, hv = 0, cnt = 1, hr = 2};
-	//static const int nmsk = 0;
-	//static const int rdr = 1;
+	enum {nmsk=0, rdr=1, sy=2, dd=3, hv=0, cnt=1, hr=2, sd=3};
 
 	//Functions
 	void ldChts(vector<string>);					//Load Chats
@@ -70,15 +68,9 @@ private:
 	void ldCndtn(string);							//Load Condition
 
 };
-//I have no idea why c++ makes me define static constants outside
-//of the class. 
-//const int NPC::nmsk;
-//const int NPC::rdr;
-
 NPC::NPC(vector<string> n) {
 	hshtbl = HshTbl<string>();
 
-	//All AI responses will be stored in a folder called, NPCs
 	ldChts(n);
 	stndrd_rspns = "What did you say? I don't know what you are talking about?";
 	nt_yt = "Sorry, I cannot tell you that yet.";
@@ -145,10 +137,11 @@ string NPC::gtRspns(string npt, int trg) {
 			if(trgs[i].rdr == nmsk) {
 				trgs[i].msk = true;
 
+/*
 			} else if(trgs[i].rdr == rdr) {
 				trgs[i].cnd = cnt;
 				trgs[i].thrsh = 0;
-
+*/
 			} else if(trgs[i].rdr == sy) {
 				tpt = trgs[i].rdr_mssg;
 				lt_tpt = true;
@@ -173,8 +166,8 @@ int NPC::gtTrggrCnt() {
 };
 int NPC::gtMxmmTrggrCnt() {
 	int tpt = 0;
-	for(int (i); i < trgs.size(); i++) {
-		tpt += trgs[i].msk;
+	for(int i(0); i < trgs.size(); i++) {
+		if(trgs[i].rdr == dd) tpt += stoi( trgs[i].rdr_mssg );
 	};
 	return tpt;
 };
@@ -224,26 +217,39 @@ vector<string> NPC::ldTrggr(vector<string> chts, int i) {
 			cndtn = chts[i].substr(0, rdr_txt_plc - 1 );
 			chts.erase( chts.begin() + i );
 			chts.erase( chts.begin() + i );
+		
+		} else if( chts[i].find("add") != string::npos ) {
+			int rdr_txt_plc = chts[i].find("add");
+			
+			trgs.back().rdr_mssg = chts[i].substr(rdr_txt_plc + 4);
+			trgs.back().rdr = dd;
+
+			cndtn = chts[i].substr(0, rdr_txt_plc - 1);
+			chts.erase( chts.begin() + i );
 		};
 		ldCndtn(cndtn);
 	};
 	return chts;
 };
 void NPC::ldCndtn(string cndtn) {
-	if( cndtn.find("have") != string::npos ) {
+	if( cndtn.substr(0, 4) == "have" ) {
 		trgs.back().cnd_mssg = cndtn.substr(5);
 		trgs.back().cnd = hv;
 
-	} else if( cndtn.find("counter") != string::npos ) {
+	} else if( cndtn.substr(0, 7) == "counter" ) {
 		trgs.back().cnd = cnt;
 		trgs.back().thrsh = stoi( cndtn.substr(8) );
 
-	} else if( cndtn.find("hear") != string::npos ) {
+	} else if( cndtn.substr(0, 4) == "hear" ) {
 		trgs.back().cnd_mssg = cndtn.substr(5);
 		trgs.back().cnd = hr;
+
+	} else if( cndtn.substr(0, 4) == "said" ) {
+		trgs.back().cnd_mssg = cndtn.substr(5);
+		trgs.back().cnd = sd;
 	};
 };
-vector<trggr> NPC::chckCndtn(string npt, int cntr) {
+vector<trggr> NPC::chckCndtn(string npt, string tpt_s, int cntr) {
 	vector<trggr> tpt;
 	for(int i(0); i < trgs.size(); i++) {
 
@@ -251,7 +257,10 @@ vector<trggr> NPC::chckCndtn(string npt, int cntr) {
 		if(trgs[i].cnd == hv) {
 			for(int j(0); j < tms.size(); j++) {
 				if(tms[j]->gtNm() == trgs[i].cnd_mssg) {
-					tpt.push_back(trgs[j]);
+					tpt.push_back(trgs[i]);
+					trgs.erase(trgs.begin() + i);
+					i--;
+					break;
 				};
 			};
 		//Is this a "threshhold" condition?
@@ -259,8 +268,12 @@ vector<trggr> NPC::chckCndtn(string npt, int cntr) {
 			if(trgs[i].thrsh <= cntr) tpt.push_back(trgs[i]);
 
 		//Is this a "hear a phrase" condition?
-		} else if(trgs[i].cnd = hr) {
+		} else if(trgs[i].cnd == hr) {
 			if(npt == trgs[i].cnd_mssg) tpt.push_back(trgs[i]);
+		
+		//Npc said a phrase
+		} else if(trgs[i].cnd == sd) {
+			if(tpt_s == trgs[i].cnd_mssg) tpt.push_back(trgs[i]);
 		};
 	};
 	return tpt;

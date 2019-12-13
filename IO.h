@@ -85,7 +85,7 @@ IO::IO(string str) {
 	box(&npc_wndw_bx, 0, 0);
 	box(&tpt_wndw_bx, 0, 0);
 	box(&npt_wndw_bx, 0, 0);
-
+	
 	string bnnr = "Setting";
 	int strt = fndBnnrStrt( x_mxmm, bnnr.size() );
 	mvwprintw(&plc_wndw_bx, 0, strt, bnnr.c_str() );
@@ -101,13 +101,14 @@ IO::IO(string str) {
 	bnnr = "Input";
 	strt = fndBnnrStrt( x_mxmm, bnnr.size() );
 	mvwprintw(&npt_wndw_bx, 0, strt, bnnr.c_str() );
-
+	
 	refresh();
 	wrefresh(&plc_wndw_bx);
 	wrefresh(&tm_wndw_bx);
 	wrefresh(&npc_wndw_bx);
 	wrefresh(&tpt_wndw_bx);
 	wrefresh(&npt_wndw_bx);
+
 };
 IO::~IO() {
 	delwin(&plc_wndw);
@@ -154,8 +155,12 @@ string IO::gtNpt() {
 	string ch;
 	do {
 		wclear(&npt_wndw);
+		
+		fflush(stdin);
 		c = getchar();
-		ch.push_back(c);
+		if(c == 127 && ch.size() > 0) {
+			ch.pop_back();
+		} else ch.push_back(c);
 		wprintw(&npt_wndw, ch.c_str());
 		wrefresh(&npt_wndw);
 	} while(13 != c);

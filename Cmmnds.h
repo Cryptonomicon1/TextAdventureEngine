@@ -16,6 +16,7 @@ public:
 	Cmmnds(shared_ptr<IO>);
 	~Cmmnds();
 	string D(shared_ptr<NPC>, string, int);		//Do Command
+	string lwrCs(string);			//Lower The Case
 
 private:
 	//Variables
@@ -26,7 +27,6 @@ private:
 	string n_tm;					//No Item
 
 	//Functions
-	string lwrCs(string);			//Lower The Case
 	string dltPncttn(string);		//Delete Punctuation
 	shared_ptr<NPC> fndNpc(shared_ptr<NPC>, string);	//Find Npc
 };
@@ -78,6 +78,8 @@ string Cmmnds::D(shared_ptr<NPC> p, string cmmnd, int trggr) {
 		shared_ptr<NPC> npc = fndNpc(plyr, tpt);
 		if(npc != nullptr) {
 			fnl_tpt = npc->gtRspns( cmmnd.substr(4, t - 5), trggr );
+		} else if(cmmnd.substr(t) == "to myself") {
+			fnl_tpt = cmmnd.substr(4, t - 5);
 		} else fnl_tpt = n_nm;
 	} else if(cmmnd.substr(0, 5) == "study") {
 		int i = 0;
@@ -127,7 +129,21 @@ string Cmmnds::D(shared_ptr<NPC> p, string cmmnd, int trggr) {
 			i++;
 		};
 		if(!sccs) fnl_tpt = n_tm;
-	} else if(false) {
+	} else if(cmmnd.substr(0, 4) == "give") {
+		int t = cmmnd.find("to");
+		string tpt = cmmnd.substr( t + 3 );
+		shared_ptr<NPC> npc = fndNpc(plyr, tpt);
+		if(npc != nullptr) {
+			int j = 0;
+			while(	plyr->gtTm(j) != nullptr && lwrCs( plyr->gtTm(j)->gtNm() ) != cmmnd.substr(5, t-6) ) {
+				j++;
+			};
+			if( plyr->gtTm(j) != nullptr && lwrCs( plyr->gtTm(j)->gtNm() ) == cmmnd.substr(5, t-6) ) {
+				npc->ddTm(plyr->tkTm(j));
+			};
+		} else {
+			fnl_tpt = n_nm;
+		};
 	} else if(false) {
 	} else if(false) {
 	} else if(false) {
