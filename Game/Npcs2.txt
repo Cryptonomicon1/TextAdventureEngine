@@ -1,37 +1,125 @@
 Npc
-Front Gate
-Theif
-Keven
+Grand Hall
+Trillionaire
+Preston
 
-trigger hear gold? drop gold
+trigger maximum 4
+trigger have book lose
+trigger have book say
+This looks evil. Get out of here.
 
-hello
-Oh, um. Hello... Can you really see me?
+trigger have hat lose
+trigger have hat say
+What is this? I don't like it. Get out of here.
+
+trigger have guitar say
+Wow thank you! I love this! Would you like to be my gf? Just say "gf" to me.
+
+trigger have card add 1
+trigger have card say
+Wow! I am impressed. You are a very honest woman.
+
+trigger said You want to be my gf? That sounds swell. *kiss* add 2
+trigger have guitar unmask
+gf
+You want to be my gf? That sounds swell. *kiss*
 
 hi
-Shhhhh. I am super stealthy. See me... disappear...
+Well, hello missy. Did you want loving now or later?
 
-how are you
-I um, I am pretty bad right now. I took this gold from this alchemist, and now I am cursed. The problem is embarrasing. I um, cannot get hard... You know... down there.
+hello
+Was your father a theif? How else could you get that twinkle in your eye?
 
-gold?
-Yeah, please take it. I don't want it anymore.
+family?
+I have a mother, father, brother, and we have an opening for the position of my wife. Are you interested in becoming an candidate?
 
-said Yeah, please take it. I don't want it anymore. add 1
+job?
+My brother and I play the stock market. He is good at what he does.
+
+hobbies?
+I love to play guitar. Would you like to hear it?
+
+dreams?
+I have a dream of being the richest man in the world.
+
+thief in closet
+That is impossible. We have the best security money can buy.
 
 Npc
-Courtyard
-Beekeeper
-Billy
+Study
+Preson's Twin
+Winston
 
-hello
-Howdy!
+trigger have card say
+YES! My brother's wealth in my hands!
+
+trigger have book say
+What is this? Dark magic? Get out of here witch!
+
+trigger have guitar say
+I don't like guitar. Get out of here.
+
+trigger have book lose
+trigger have guitar lose
+trigger have Card lose
+
+trigger have hat say
+Thanks girl. I'll add this to my hat collection. Do you want to be my gf? Just tell me, "gf."
+
+trigger have hat unmask
+gf
+I will let you be my gf. *kiss*
+
+trigger said I will let you be my gf. *kiss* add 4
 
 hi
-Howdy!
+I lost my number. May I have yours? *wink*
 
-how are you
-I'm just swell *hic*. But don't tell my boss I am drunk.
+hello
+Hey hot stuff. What are you doing later?
 
-honey?
-Aw man! I just ran out. I sold it all to Alfred. Sorry
+family?
+My family is alright. My mother spends most of her time drunk. My father spends most of his time working. My brother is a fun guy. I just wish I could have his money. I would love a new car these days.
+
+job?
+My brother and I are stock investors. I could never figure out how he was so much better than me at it. However, he more than earns his keep. Haha!
+
+hobbies?
+On the weekends, I mostly relax. However, I go clubbing now and then. Are you free this weekend?
+
+dreams?
+I dream of only you sweetcakes.
+
+thief in closet
+I don't believe you.
+
+Npc
+Closet
+Thief
+Keven
+
+trigger have card say
+YES! THANK YOU! I AM FREE FREEEEEEEEE! Now, how do I get out of here?
+
+trigger have card lose
+
+hi
+Shhh, don't give me away. I am hiding here for Preston's goods. I have been here a week.
+
+hello
+Shhh, don't give me away. I am here for Preston's money.
+
+family?
+I am an only orphan child. My parents left me at the orphanage before I can remember. *sniff*
+
+job?
+I um... I am the janitor I swear it... *starts cleaning vigorously... and badly...*
+
+hobbies?
+I really enjoy moonlit walks on the beach. You?
+
+dreams?
+One day *intense stare* I WILL get out of this closet... one day...
+
+thief in closet
+What? Really? Where?

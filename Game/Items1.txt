@@ -1,36 +1,36 @@
 1
 Item
-Courtyard
-cart
-broken
-This cart is so broken; it makes your old man look spry.
-
-Item
-Courtyard
-urn
-leaky
-It is just an urn.
-
-Item
-Blacksmith's Shop
-anvil
-iron
-This looks like a plain anvil to me.
+Grand Hall
+hanger
+coat
+looks like an ordinary coat hanger. Why did you study this?
 
 Item
 Joe
-daggar
-beautiful
-This daggar is encrusted with gems.
+book
+dark arts
+This smoldering book oozes with magic. Is it from heaven or hell? Idk.
 
 Item
-Alfred
-honey
-pot of
-This honey is infused with ginseng.
+Study
+note
+paper
+Dear Jenkins, Thank you for the magic lessons.
 
 Item
-Keven
-gold
-bar of
-This is regular gold.
+Jenkins
+card
+debit
+Who knows what untold millions is in this bank account.
+
+Item
+Joe
+hat
+clubbing
+This is a black fedora. It looks like it is made of silk.
+
+Item
+Joe
+guitar
+fancy
+This guitar looks expensive. What did you pay for this?

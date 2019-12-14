@@ -1,5 +1,4 @@
 take ___ from ___
-give ___ to ___
 
 Done Commands
 go ___ [(n)orth] [(e)ast] [(s)outh] [(w)est]
@@ -7,3 +6,11 @@ say ___ to ___
 study ___
 drop ___
 take ___
+give ___ to ___
+
+Specific things to say in this game
+say family? to ___
+say job? to ___
+say hobbies? to ___
+say dreams? to ___
+say theif in close to ___

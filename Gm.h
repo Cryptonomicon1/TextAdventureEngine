@@ -49,10 +49,9 @@ private:
 	shared_ptr<Cmmnds> cmmnds;
 	int cntr;
 	string tpt_strng;
+	int mxmm_trggrs;
 
-	enum {nmsk=0, rdr=1, sy=2, dd=3, hv=0, cnt=1, hr=2};
-
-	int hll, gt, alch, blck, crt;
+	enum {nmsk=0, rdr=1, sy=2, dd=3, ls=4, hv=0, cnt=1, hr=2};
 
 	//Functions
 	void bldMp();
@@ -66,15 +65,10 @@ private:
 	void dRdrs(string, string);
 	void dRdr(shared_ptr<NPC>, string, string);
 	string fltrStrng(string, string);
+	void ldRmLks();
 };
 Gm::Gm(string s) {
-	crt = 0;
-	hll = 1;
-	blck = 2;
-	gt = 4;
-	alch = 3;
-
-	cntr = 1;
+	cntr = 0;
 
 	tpt_strng = "";
 	
@@ -84,8 +78,9 @@ Gm::Gm(string s) {
 	bldTms();
 
 	plyr = make_shared<NPC>();
-	plyr->stRm(rms[0]);
+	plyr->stRm(rms[2]);
 	cmmnds = make_shared<Cmmnds>(io);
+	mxmm_trggrs = gtMxmmTrggrs();
 };
 Gm::~Gm() {
 };
@@ -93,7 +88,6 @@ void Gm::ply() {
 	string npt;
 	int npc_i = 0;
 	int tm_i = 0;
-	int mxmm_trggrs = gtMxmmTrggrs();
 	do {
 		io->clrWndw();
 		io->pdtPlcWndw(plyr->gtRm()->gtNm() + "\n");
@@ -138,7 +132,7 @@ void Gm::ply() {
 			npt != "Quit" && gtTrggrCnt() < mxmm_trggrs);
 
 	if(gtTrggrCnt() >= mxmm_trggrs) {
-		tpt_strng = "";
+		//tpt_strng = "";
 		dRdrs(npt, tpt_strng);
 		io->clrWndw();
 		io->pdtTptWndw(tpt_strng);
@@ -146,32 +140,95 @@ void Gm::ply() {
 		io->gtNpt();
 	};
 };
+//I know this function has much repetition. However, I could either
+//use 3 more nested for loops, or I can use a mathy solution
+//involving ((i+1)%2)-1 to turn an i count into specific sequences.
+//I figured the simple dumb repetative way is easy to maintain.
 void Gm::bldMp() {
-	rms.push_back( make_shared<Rms>("Courtyard", "Vendors and tradesmen hustle and bustle in the courtyard around you.") );
+	vector<vector<string>> rooms = RdCsv("./Game/Rms1.csv");
+	int fl_cnt = stoi( rooms[0][0].c_str() );
+	rooms.erase( rooms.begin() );
 
-	rms.push_back( make_shared<Rms>("Grand Hall", "Various people eat at long tables for a high price.") );
-	
-	rms.push_back( make_shared<Rms>("Blacksmith's Shop", "The Blacksmith ignores you as he tends to his forge.") );
-	
-	rms.push_back( make_shared<Rms>("Alchemist's Shop", "The Alchemist mumbles about making gold as he plays with chemicals. He looks high.") );
-	
-	rms.push_back( make_shared<Rms>("Front Gate", "Guards sleep on duty as a thief takes a sword from a nearby rack.") );
+	//Iterate over files if in 3D TODO add up/downstairs for 3d maps
+	for(int i(1); i <= fl_cnt; i++) {
 
-	//Courtyard to Grand Hall
-	rms[crt]->stPth(rms[hll], d.nrth);
-	rms[hll]->stPth(rms[crt], d.sth);
+		//Iterate over y
+		for(int j(0); j < rooms.size(); j++) {
 
-	//Courtyard to Blacksmith's Shop
-	rms[crt]->stPth(rms[blck], d.st);
-	rms[blck]->stPth(rms[crt], d.wst);
-	
-	//Courtyard to Front Gate
-	rms[crt]->stPth(rms[gt], d.sth);
-	rms[gt]->stPth(rms[crt], d.nrth);
-	
-	//Courtyard to Alchemist's Shop
-	rms[crt]->stPth(rms[alch], d.wst);
-	rms[alch]->stPth(rms[crt], d.st);
+			//Iterate over x
+			for(int k(0); k < rooms[0].size(); k++) {
+				if( rooms[j][k] != "" ) {
+					if( fndRm( rooms[j][k] ) == nullptr
+						&& rooms[j][k] != "" ) rms.push_back(
+						make_shared<Rms>( rooms[j][k] ) );
+
+					if( j != 0 && rooms[j-1][k] != "" ) {
+						if( fndRm( rooms[j-1][k] ) == nullptr )
+							rms.push_back(
+							make_shared<Rms>( rooms[j-1][k] ));
+						
+						fndRm( rooms[j][k] )->stPth(
+							fndRm( rooms[j-1][k] ), d.nrth );
+							
+						fndRm( rooms[j-1][k] )->stPth(
+							fndRm(rooms[j][k] ), d.sth );
+					};
+					if( j != rooms.size() - 1 && rooms[j+1][k]!="") {
+						if( fndRm( rooms[j+1][k] ) == nullptr )
+							rms.push_back(
+							make_shared<Rms>( rooms[j+1][k] ));
+
+						fndRm( rooms[j][k] )->stPth(
+							fndRm( rooms[j+1][k] ), d.sth );
+							
+						fndRm(rooms[j+1][k])->stPth(
+							fndRm(rooms[j][k] ), d.nrth );
+					};
+					if( k != 0 && rooms[j][k-1] != "") {
+						if( fndRm( rooms[j][k-1] ) == nullptr )
+							rms.push_back(
+							make_shared<Rms>( rooms[j][k-1] ));
+						
+						fndRm(rooms[j][k])->stPth(
+							fndRm(rooms[j][k-1] ), d.wst );
+							
+						fndRm(rooms[j][k-1])->stPth(
+							fndRm(rooms[j][k] ), d.st );
+					};
+					if(k != rooms[0].size()-1 && rooms[j][k+1]!="") {
+						if( fndRm( rooms[j][k+1] ) == nullptr )
+							rms.push_back(
+							make_shared<Rms>( rooms[j][k+1] ));
+						
+						fndRm(rooms[j][k])->stPth(
+							fndRm(rooms[j][k+1] ), d.st );
+							
+						fndRm(rooms[j][k+1])->stPth(
+							fndRm(rooms[j][k] ), d.wst );
+					};
+				};
+			};
+		};
+		if(i <= fl_cnt) {
+			rooms = RdCsv("./Game/Rms" + to_string(i) + ".csv");
+		};
+	};
+	ldRmLks();
+};
+//Load Room Looks
+void Gm::ldRmLks() {
+	vector<string> lks = Rd("./Game/Rms1.txt");
+	int fl_cnt = stoi(lks[0]);
+	lks.erase(lks.begin());
+
+	for(int i(1); i <= fl_cnt; i++) {
+		for(int j(0); j < lks.size(); j+=2) {
+			fndRm( lks[j] )->stBt( lks[j+1] );
+		};
+		if(i <= fl_cnt) {
+			lks = Rd("./Game/Rms" + to_string(i) + ".txt");
+		};
+	};
 };
 void Gm::bldNpcs() {
 	vector<string> dt = Rd("./Game/Npcs1.txt");
@@ -256,7 +313,7 @@ int Gm::gtMxmmTrggrs() {
 			j++;
 		};
 	};
-	return tpt + 1;
+	return tpt;
 };
 int Gm::gtRmNdx(string nm) {
 	int i = 0;
@@ -275,8 +332,8 @@ shared_ptr<Rms> Gm::fndRm(string nm) {
 	return nullptr;
 };
 shared_ptr<NPC> Gm::fndNpc(string n) {
-	int i = 0, j = 0;
-	while(rms[i] != nullptr) {
+	int j = 0;
+	for(int i(0); i < rms.size(); i++) {
 		j = 0;
 		while(rms[i]->gtNpc(j) != nullptr) {
 			if(rms[i]->gtNpc(j)->gtNm() == n) {
@@ -284,19 +341,17 @@ shared_ptr<NPC> Gm::fndNpc(string n) {
 			};
 			j++;
 		};
-		i++;
 	};
 	return nullptr;
 };
 void Gm::dRdrs(string npt, string tpt) {
-	int i = 0, j = 0;
-	while(rms[i] != nullptr) {
+	int j = 0;
+	for(int i(0); i < rms.size(); i++) {
 		j = 0;
 		while(rms[i]->gtNpc(j) != nullptr) {
 			dRdr(rms[i]->gtNpc(j), npt, tpt);
 			j++;
 		};
-		i++;
 	};
 };
 void Gm::dRdr(shared_ptr<NPC> n, string npt, string tpt) {
@@ -321,6 +376,12 @@ void Gm::dRdr(shared_ptr<NPC> n, string npt, string tpt) {
 		
 		} else if(trgs[i].rdr == dd) {
 			cntr += stoi( trgs[i].rdr_mssg );
+		
+		} else if(trgs[i].rdr == ls) {
+			cntr = mxmm_trggrs + 1;
+			if(tpt_strng == " " || tpt_strng == "") {
+				tpt_strng = "You lost the game. ";
+			} else tpt_strng += " You lost the game. ";
 		};
 	};
 };

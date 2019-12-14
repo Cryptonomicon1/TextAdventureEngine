@@ -1,83 +1,167 @@
 2
 Npc
-Blacksmith's Shop
-Blacksmith
-Joe
-
-hello
-Hey, I am kind of busy right now.
+Grand Hall
+Butler
+Jenkins
 
 hi
-hey *grunt*
+Hello madam. Did you want something?
 
-how are you
-Life is hard work.
+trigger have hanger say
+How improper of you! You may leave now.
+trigger have hanger lose
 
-trigger hear hard pointy thing? drop daggar
-hard pointy thing?
-Well that depends on the service you are requesting. *wink* I know what you mean. The queen wanted this for days. I finally have it ready. Here is her jewel encrusted daggar.
+family?
+I am but a simple servant. I have no more family than the people here.
 
+job?
+Can't you see? I am the butler. I thought my appearance gave that away.
 
-said Well that depends on the service you are requesting. *wink* I know what you mean. The queen wanted this for days. I finally have it ready. Here is her jewel encrusted daggar. add 1
+trigger have note add 1
+trigger have note say
+Oh, heavens. How did I leave this lying around? I guess you found out that I give magic lessons. I will confess... I am a wizard.
+
+trigger counter 1 drop card
+trigger have book say
+Thank you. I love magic. How did you know? Would you like to be my girlfriend? Just say "gf" to me.
+
+trigger have book unmask
+gf
+This is the best day of my life! *kiss*
+
+trigger said This is the best day of my life! *kiss* add 4
+
+trigger have guitar say
+Why would you give me this? I hate guitar. Get out of here.
+
+trigger have guitar lose
+
+trigger have hat say
+Why would you give me this? I hate guitar. Get out of here.
+
+trigger have hat lose
+
+trigger have note unmask
+hobbies?
+I must confess madam. I love magic, because I am secretly a wizard.
+
+trigger have note unmask
+dreams?
+I dream of marrying a witch one day.
+
+thief in closet
+Yes, I saw that. I am keeping my eye on him.
 
 Npc
-Courtyard
-Jester
-Jacobs
+Outside
+Street Vendor
+Joe
 
-hello
-hello
+trigger hear guitar say
+That will be $1000. Thank you. Here you are missy.
+
+trigger hear hat say
+That will be $1000. Thank you. Here you are missy.
+
+trigger hear book say
+That will be $1000. Thank you. Here you are missy.
+
+trigger hear guitar drop guitar
+trigger hear hat drop hat
+trigger hear book drop book
 
 hi
-hey
+Hello to you too pretty. Would you like to buy something?
 
-how are you
-I am fantastic! I like the flame. Follow the flame! Follow it!
+hello
+How are you beautful? Would you like to buy something?
+
+family?
+I... would rather you buy something *pst* say "buy" to me.
+
+job?
+Can't you see? I sell stuff. Would you buy something *pst* say "buy" to me.
+
+hobbies?
+Selling stuff to you babe. Would you please say "buy?" to me
+
+dreams?
+I am just a simple merchant. Would you buy something please? Just say "buy"
+
+buy
+Well, with your money, it looks like you can buy a club hat, a fancy guitar, or/and a book on magic. Just say the item name to me, and you can have it.
+
+buy?
+Well, with your money, it looks like you can buy a club hat, a fancy guitar, or/and a book on magic. Just say the item name to me, and you can have it.
+
+thief in closet
+I don't care. Would you buy something? Just say "buy" to me.
+
+Npc
+Study
+Accountant
+Jill
+
+trigger have card say
+Oh, um thank you. I will just give this back to Preston later.
+
+hi
+Hello, how are you?
+
+hello
+Hi, how are you?
+
+thief in closet
+What? Maybe I need to leave. I don't feel safe with a thief hiding in the closet here.
+
+family?
+I am a wife with two kids and a brother. They are a handful. I wish my husband did more around that house though. I am sure you know all about that, haha.
+
+job?
+I do the accounting for Preston. He is an inspiring stock broker.
+
+hobbies?
+I don't have much time for hobbies. I work hard, then I work hard some more. Between Preston, my kids, and my husband. I don't have much time left in the day.
+
+dreams?
+I dream of making just enough money to retire. I work hard now to relax later. You?
 
 Npc
 Grand Hall
-Queen
-Jane
+Biker
+Bob
 
-trigger hear how are you add 1
-trigger have honey add 1
-trigger have daggar add 1
-trigger have daggar say
-Thank you sweetheart! I like your hard pointy thing.
+trigger have guitar say
+I don't want this. Get out of here.
 
-trigger have honey say
-Thank you honey!
+trigger have book say
+I don't read. I don't want a book. Get out of here.
 
-trigger counter 4 say
-Thank you so much! I really appreciate your offerings! I cannot wait to see you tonight babe!
+trigger have hat say
+This hat is not my style. I don't like your style. Get out of here.
 
-hello
-Hello lovely! *wink*
+trigger have hat lose
+trigger have guitar lose
+trigger have book lose
 
 hi
-hey!
-
-how are you
-I am fine cutie. I remember the nights we spent together. Thank goodness The King doesn't know about us yet. Well, I was wondering if you would meet me tonight. But first, I want you to come prepared. Would you bring a hard pointy thing and some honey?
-
-Npc
-Alchemist's Shop
-Alchemist
-Alfred
-
-trigger have gold drop honey
-trigger have gold add 1
-trigger have gold say
-Thank you GOLD GOLD GOLD! I love it! Oh, you wanted something? Sure, here is your ginseng infused honey.
+Hey how are you babe?
 
 hello
-Hello! Do you have gold? Goooooold.
+Hey, what's up sweety?
 
-hi
-Hello, do you have gold? Goooooold.
+thief in closet
+There is a WHAT?! in the closet? I will have to take care of this ASAP!
 
-how are you
-I am terrible! a theif stole my gold. I am very angry. Would you get it back please? Pleeeeeease? I like gold.
+family?
+My dad is about to pass away from cancer. My mom is alright though. She is retired. My sister Jill is an accountant.
 
-honey?
-I do have some enchanted honey. However, I don't work for free. If you could get my gold back from the theif, I would appreciate it.
+job?
+I run security for Preston. I know I don't look like much, but I am the best money can buy... or maybe the job market doesn't have much to offer... either way.
+
+hobbies?
+I love to ride my motorcycle through the countryside.
+
+dreams?
+I only dream to ride free with the wind at my back.
+

@@ -59,8 +59,9 @@ private:
 	vector<bool> trggr_stt;
 	string rm_nm;
 	vector<trggr> trgs;
+	int mxmm_trggrs;
 
-	enum {nmsk=0, rdr=1, sy=2, dd=3, hv=0, cnt=1, hr=2, sd=3};
+	enum {nmsk=0, rdr=1, sy=2, dd=3, ls=4, hv=0, cnt=1, hr=2, sd=3};
 
 	//Functions
 	void ldChts(vector<string>);					//Load Chats
@@ -69,6 +70,7 @@ private:
 
 };
 NPC::NPC(vector<string> n) {
+	mxmm_trggrs = 0;
 	hshtbl = HshTbl<string>();
 
 	ldChts(n);
@@ -76,6 +78,7 @@ NPC::NPC(vector<string> n) {
 	nt_yt = "Sorry, I cannot tell you that yet.";
 };
 NPC::NPC() {
+	mxmm_trggrs = 0;
 	hshtbl = HshTbl<string>();
 	stndrd_rspns = "What did you say? I don't know what you are talking about?";
 	nt_yt = "Sorry, I cannot tell you that yet.";
@@ -143,7 +146,7 @@ string NPC::gtRspns(string npt, int trg) {
 				trgs[i].thrsh = 0;
 */
 			} else if(trgs[i].rdr == sy) {
-				tpt = trgs[i].rdr_mssg;
+				tpt = " ";
 				lt_tpt = true;
 			};
 		};
@@ -151,10 +154,10 @@ string NPC::gtRspns(string npt, int trg) {
 		n_msk = n_msk && (trgs[i].rdr_mssg != tpt);
 	};
 	lt_tpt = lt_tpt || n_msk;
-	if(tpt == "") {
-		return stndrd_rspns;
-	} else if(lt_tpt) {
+	if(lt_tpt) {
 		return tpt;
+	} else if(tpt == "") {
+		return stndrd_rspns;
 	} else return nt_yt;
 };
 int NPC::gtTrggrCnt() {
@@ -164,12 +167,14 @@ int NPC::gtTrggrCnt() {
 	};
 	return tpt;
 };
-int NPC::gtMxmmTrggrCnt() {
+int NPC::gtMxmmTrggrCnt() { /*
 	int tpt = 0;
 	for(int i(0); i < trgs.size(); i++) {
-		if(trgs[i].rdr == dd) tpt += stoi( trgs[i].rdr_mssg );
+		if(trgs[i].mx == dd) tpt += stoi( trgs[i].rdr_mssg );
 	};
 	return tpt;
+	*/
+	return mxmm_trggrs;
 };
 vector<string> NPC::ldTrggr(vector<string> chts, int i) {
 	if(chts[i].size() > 8) {
@@ -226,6 +231,23 @@ vector<string> NPC::ldTrggr(vector<string> chts, int i) {
 
 			cndtn = chts[i].substr(0, rdr_txt_plc - 1);
 			chts.erase( chts.begin() + i );
+		
+		} else if( chts[i].find("maximum") != string::npos ) {
+			int rdr_txt_plc = chts[i].find("maximum");
+
+			trgs.back().rdr_mssg = chts[i].substr(rdr_txt_plc + 8);
+			mxmm_trggrs += stoi(trgs.back().rdr_mssg);
+			
+			trgs.pop_back();
+			chts.erase( chts.begin() + i );
+		
+		} else if( chts[i].find("lose") != string::npos ) {
+			int rdr_txt_plc = chts[i].find("lose");
+			
+			trgs.back().rdr = ls;
+
+			cndtn = chts[i].substr(0, rdr_txt_plc - 1);
+			chts.erase( chts.begin() + i );
 		};
 		ldCndtn(cndtn);
 	};
@@ -265,15 +287,27 @@ vector<trggr> NPC::chckCndtn(string npt, string tpt_s, int cntr) {
 			};
 		//Is this a "threshhold" condition?
 		} else if(trgs[i].cnd == cnt) {
-			if(trgs[i].thrsh <= cntr) tpt.push_back(trgs[i]);
+			if(trgs[i].thrsh <= cntr) {
+				tpt.push_back(trgs[i]);
+				trgs.erase(trgs.begin() + i);
+				i--;
+			};
 
 		//Is this a "hear a phrase" condition?
 		} else if(trgs[i].cnd == hr) {
-			if(npt == trgs[i].cnd_mssg) tpt.push_back(trgs[i]);
+			if(npt == trgs[i].cnd_mssg) {
+				tpt.push_back(trgs[i]);
+				trgs.erase(trgs.begin() + i);
+				i--;
+			};
 		
 		//Npc said a phrase
 		} else if(trgs[i].cnd == sd) {
-			if(tpt_s == trgs[i].cnd_mssg) tpt.push_back(trgs[i]);
+			if(tpt_s == trgs[i].cnd_mssg) {
+				tpt.push_back(trgs[i]);
+				trgs.erase(trgs.begin() + i);
+				i--;
+			};
 		};
 	};
 	return tpt;

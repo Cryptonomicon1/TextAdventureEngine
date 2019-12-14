@@ -1,4 +1,4 @@
 all: Main
 
 Main: Main.c++
-	g++ Main.c++ -o Castle -lncurses -g
+	g++ Main.c++ -o TxtDvntr -lncurses -g
